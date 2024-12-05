@@ -7,7 +7,8 @@ import importlib
 wait_random = importlib.import_module('0-basic_async_syntax').wait_random
 
 
-async def wait_n(n: int, max_delay: int) -> float:
+async def wait_n(n: int, max_delay: int) -> list[float]:
     '''Wait for a random delay and return the result'''
-    delays = [wait_random(max_delay) for i in range(n)]
-    return [await delay for delay in asyncio.as_completed(delays)]
+    tasks = [wait_random(max_delay) for _ in range(n)]
+    delays = await asyncio.gather(*tasks)
+    return sorted(delays)
